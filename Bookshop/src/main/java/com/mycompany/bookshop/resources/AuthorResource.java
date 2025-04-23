@@ -4,10 +4,88 @@
  */
 package com.mycompany.bookshop.resources;
 
+import com.mycompany.bookshop.Authors;
+import com.mycompany.bookshop.Books;
+import java.util.ArrayList;
+import java.util.List;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
 /**
  *
  * @author Shemeshi Robert
  */
+@Path("authors")
 public class AuthorResource {
+    private static List<Authors> authors = new ArrayList<>();
+    private static int nextId = 0;
     
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void createAuthor(Authors author){
+        author.setId(nextId++);
+        authors.add(author);
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Authors> getAuthors(){
+        return authors;
+    }
+    
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Authors getAuthorById(@PathParam("id") int id){
+        for(Authors author: authors){
+            if(author.getId() == id){
+                return author;
+            }
+        }
+        return null;
+    }
+    
+    @PUT
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void updateAuthor(@PathParam("id") int id, Authors updatedAuthor){
+        for(int i = 0; i < authors.size(); i++){
+            Authors author = authors.get(i);
+            if(author.getId() == id){
+                updatedAuthor.setId(id);
+               authors.set(i, updatedAuthor);
+                return;
+            }       
+        }       
+    }
+    
+    @DELETE
+    @Path("/{id}")
+    public void deleteAuthor(@PathParam("id") int id) {
+        for(int i = 0; i < authors.size(); i++){
+            Authors author = authors.get(i);
+            if(author.getId() == id){
+                authors.remove(i);
+            }       
+        } 
+    }
+    
+    @GET
+    @Path("/{id}/books")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Books> getBooksByAuthor(@PathParam("id") int id){
+        List<Books> bookList = new ArrayList<>();
+        for(Books book: BookResource.getBooks()){
+            if(book.getAuthor().getId() == id)
+                bookList.add(book);
+        }
+        return bookList;
+    }
 }
