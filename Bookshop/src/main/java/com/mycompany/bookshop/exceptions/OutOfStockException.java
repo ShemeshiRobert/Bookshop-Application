@@ -8,6 +8,8 @@ package com.mycompany.bookshop.exceptions;
  *
  * @author Shemeshi Robert
  */
-public class OutOfStockException {
-    
+public class OutOfStockException extends RuntimeException {
+    public OutOfStockException(String message) {
+        super(message);
+    }
 }

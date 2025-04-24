@@ -8,6 +8,11 @@ package com.mycompany.bookshop.exceptions;
  *
  * @author Shemeshi Robert
  */
-public class BookNotFoundException {
-    
+
+public class BookNotFoundException extends RuntimeException {
+    public BookNotFoundException(String message) {
+        super(message);
+    }
 }
+
+

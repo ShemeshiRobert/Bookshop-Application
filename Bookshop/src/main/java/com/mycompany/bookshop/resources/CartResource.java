@@ -172,18 +172,4 @@ public class CartResource {
         
         return cart;
     }
-    
-    @DELETE
-    public void clearCart(@PathParam("customerId") int customerId) {
-        if (customerId <= 0) {
-            throw new CustomerNotFoundException("Invalid customer ID: " + customerId);
-        }
-
-        Carts cart = carts.get(customerId);
-        if (cart == null) {
-            throw new CartNotFoundException("Cart for customer " + customerId + " not found.");
-        }
-        
-        cart.clear();
-    }
 }

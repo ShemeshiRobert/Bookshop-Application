@@ -8,6 +8,27 @@ package com.mycompany.bookshop.exceptions.mappers;
  *
  * @author Shemeshi Robert
  */
-public class AuthorNotFoundExceptionMapper {
-    
+import com.mycompany.bookshop.exceptions.AuthorNotFoundException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import javax.ws.rs.core.MediaType;
+
+@Provider
+public class AuthorNotFoundExceptionMapper implements ExceptionMapper<AuthorNotFoundException> {
+    private static final Logger logger = LoggerFactory.getLogger(AuthorNotFoundExceptionMapper.class);
+
+    @Override
+    public Response toResponse(AuthorNotFoundException exception) {
+        logger.error("Author not found: {}", exception.getMessage(), exception);
+        
+        return Response
+                .status(Response.Status.NOT_FOUND)
+                .entity(exception.getMessage())
+                .type(MediaType.TEXT_PLAIN)
+                .build();
+    }
 }
+
