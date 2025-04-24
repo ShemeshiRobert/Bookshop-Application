@@ -7,6 +7,10 @@ package com.mycompany.bookshop.resources;
 import com.mycompany.bookshop.Books;
 import com.mycompany.bookshop.Customers;
 import com.mycompany.bookshop.Carts;
+import com.mycompany.bookshop.exceptions.BookNotFoundException;
+import com.mycompany.bookshop.exceptions.CartNotFoundException;
+import com.mycompany.bookshop.exceptions.CustomerNotFoundException;
+import com.mycompany.bookshop.exceptions.InvalidInputException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +34,7 @@ import javax.ws.rs.core.MediaType;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class CartResource {
-    private static final Map<Integer, Carts> carts = new HashMap<>();
+    private static final Map<Integer, Carts> carts = new HashMap<>(); //customerId, cart   
     
     private Books findBookById(int bookId) {
         Books book = BookResource.getBookById(bookId);
@@ -48,7 +52,6 @@ public class CartResource {
             return false;
     }
     
-    // Get or create a cart for a customer
     private Carts getOrCreateCart(int customerId) {
         if (!customerExists(customerId)) {
             throw new CustomerNotFoundException("Customer with ID " + customerId + " not found.");
@@ -64,44 +67,30 @@ public class CartResource {
     
     @POST
     @Path("/items")
-    public Carts addItemToCart(@PathParam("customerId") int customerId, Map<String, Integer> payload) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void addItemToCart(@PathParam("customerId") int customerId, Map<String, Integer> items) {
         if (customerId <= 0) {
             throw new CustomerNotFoundException("Invalid customer ID: " + customerId);
         }
-        
-        Integer bookId = payload.get("bookId");
-        Integer quantity = payload.get("quantity");
-        
-        if (bookId == null || quantity == null) {
-            throw new BadRequestException("Both bookId and quantity are required");
+        if (!customerExists(customerId)) {
+            throw new CustomerNotFoundException("Customer with ID " + customerId + " not found.");
         }
-        
-        if (bookId <= 0) {
-            throw new BadRequestException("Invalid book ID: " + bookId);
-        }
-        
-        if (quantity <= 0) {
-            throw new BadRequestException("Quantity must be greater than zero");
-        }
-        
-        Books book = findBookById(bookId);
-        
         Carts cart = getOrCreateCart(customerId);
-        
-        try {
-            cart.addItem(bookId, quantity, book);
-            return cart;
-        } catch (Carts.OutOfStockException e) {
-            throw new OutOfStockException(e.getMessage());
-        }
+        Integer bookId = items.get("bookId");
+        Integer quantity = items.get("quantity");       
+        Books book = findBookById(bookId);
+        cart.addItem(bookId, quantity, book);
     }
     
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     public Carts getCart(@PathParam("customerId") int customerId) {
         if (customerId <= 0) {
             throw new CustomerNotFoundException("Invalid customer ID: " + customerId);
         }
-        
+        if (!customerExists(customerId)) {
+            throw new CustomerNotFoundException("Customer with ID " + customerId + " not found.");
+        }
         Carts cart = carts.get(customerId);
         if (cart == null) {
             cart = new Carts(customerId);
@@ -113,63 +102,38 @@ public class CartResource {
     
     @PUT
     @Path("/items/{bookId}")
-    public Carts updateItemQuantity(
-            @PathParam("customerId") int customerId,
-            @PathParam("bookId") int bookId,
-            Map<String, Integer> payload) {
-        
-        if (customerId <= 0) {
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void updateItemQuantity(@PathParam("customerId") int customerId, @PathParam("bookId") int bookId, int quantity){       
+        if (customerId <= 0 ) {
             throw new CustomerNotFoundException("Invalid customer ID: " + customerId);
         }
-        
-        if (bookId <= 0) {
-            throw new BadRequestException("Invalid book ID: " + bookId);
+        if (!customerExists(customerId)) {
+            throw new CustomerNotFoundException("Customer with ID " + customerId + " not found.");
         }
-        
-        // Extract and validate quantity parameter
-        Integer quantity = payload.get("quantity");
-        if (quantity == null) {
-            throw new BadRequestException("Quantity is required");
-        }
-        
         Carts cart = carts.get(customerId);
         if (cart == null) {
             throw new CartNotFoundException("Cart for customer " + customerId + " not found.");
         }
         
         Books book = findBookById(bookId);
-        
-        try {
-            cart.updateItem(bookId, quantity, book);
-            return cart;
-        } catch (Carts.OutOfStockException e) {
-            throw new OutOfStockException(e.getMessage());
-        }
+        cart.updateItem(bookId, quantity, book);
     }
     
     @DELETE
     @Path("/items/{bookId}")
-    public Carts removeItem(
-            @PathParam("customerId") int customerId,
-            @PathParam("bookId") int bookId) {
-        
+    public Carts removeItem(@PathParam("customerId") int customerId,@PathParam("bookId") int bookId) {       
         if (customerId <= 0) {
             throw new CustomerNotFoundException("Invalid customer ID: " + customerId);
         }
-        
-        if (bookId <= 0) {
-            throw new BadRequestException("Invalid book ID: " + bookId);
-        }
-        
+        if (!customerExists(customerId)) {
+            throw new CustomerNotFoundException("Customer with ID " + customerId + " not found.");
+        }        
         Carts cart = carts.get(customerId);
         if (cart == null) {
             throw new CartNotFoundException("Cart for customer " + customerId + " not found.");
-        }
-        
-        Books book = findBookById(bookId);
-        
-        cart.removeItem(bookId, book);
-        
+        }       
+        Books book = findBookById(bookId);       
+        cart.removeItem(bookId, book);        
         return cart;
     }
 }

@@ -4,6 +4,9 @@
  */
 package com.mycompany.bookshop;
 
+import com.mycompany.bookshop.exceptions.BookNotFoundException;
+import com.mycompany.bookshop.exceptions.InvalidInputException;
+import com.mycompany.bookshop.exceptions.OutOfStockException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,17 +44,15 @@ public class Carts {
         this.items = items;
     }
 
-    // Add a book to the cart
-    public void addItem(int bookId, int quantity, Books book) {
+    public Map<Integer, Integer> addItem(int bookId, int quantity, Books book) {
         if (book == null) {
-            throw new IllegalArgumentException("Book cannot be null");
+            throw new BookNotFoundException("Book not Found");
         }
         
         int stockQuantity = book.getStockQuantity();
         
-        // Check if adding this quantity would exceed available stock
         if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be greater than zero");
+            throw new InvalidInputException("Quantity must be greater than zero");
         }
         
         int currentQuantity = items.getOrDefault(bookId, 0);
@@ -60,71 +61,53 @@ public class Carts {
         if (newTotalQuantity > stockQuantity) {
             throw new OutOfStockException("Not enough stock available. Only " + stockQuantity + " remaining.");
         }
-        
-        // Update cart and reduce book stock
         items.put(bookId, newTotalQuantity);
         book.setStockQuantity(stockQuantity - quantity);
+        
+        return items;
     }
 
-    // Update the quantity of a book in the cart
-    public void updateItem(int bookId, int newQuantity, Books book) {
+    public Map<Integer, Integer> updateItem(int bookId, int newQuantity, Books book) {
         if (book == null) {
-            throw new IllegalArgumentException("Book cannot be null");
+            throw new BookNotFoundException("Book not Found");
         }
         
-        if (newQuantity <= 0) {
+        if (newQuantity < 0){
+            throw new InvalidInputException("Invalid Quantity. Enter a positive value.");
+        }       
+        if (newQuantity == 0) {
             removeItem(bookId, book);
-            return;
-        }
-        
+            return items;
+        }        
         int stockQuantity = book.getStockQuantity();
-        int currentInCart = items.getOrDefault(bookId, 0);
-        
-        // Calculate how many more books we need (could be negative if reducing quantity)
+        int currentInCart = items.getOrDefault(bookId, 0);    
         int difference = newQuantity - currentInCart;
-        
-        // If increasing quantity, check if enough stock available
         if (difference > 0 && difference > stockQuantity) {
             throw new OutOfStockException("Not enough stock available. Only " + stockQuantity + " remaining.");
         }
-        
-        // Update book stock
         book.setStockQuantity(stockQuantity - difference);
-        
-        // Update cart
         items.put(bookId, newQuantity);
-    }
-
-    // Remove a book from the cart
-    public void removeItem(int bookId, Books book) {
-        if (book == null) {
-            throw new IllegalArgumentException("Book cannot be null");
-        }
-        
-        Integer quantityInCart = items.get(bookId);
-        if (quantityInCart != null && quantityInCart > 0) {
-            // Return books to inventory
-            book.setStockQuantity(book.getStockQuantity() + quantityInCart);
-            
-            // Remove from cart
-            items.remove(bookId);
-        }
+        return items;
     }
     
-    // Check if the cart is empty
+    public Map<Integer, Integer> removeItem(int bookId, Books book) {
+        if (book == null) {
+            throw new BookNotFoundException("Book not Found");
+        }      
+        int quantityInCart = items.get(bookId);
+        if (quantityInCart > 0) {
+            book.setStockQuantity(book.getStockQuantity() + quantityInCart);
+            items.remove(bookId);
+        }
+        return items;
+    }
+    
     public boolean isEmpty() {
         return items.isEmpty();
     }
     
-    // Clear all items from the cart
-    public void clear() {
+    public void clear(Customers customer) {
         items.clear();
     }
-    
-    // Custom exception for out of stock scenarios
-    public static class OutOfStockException extends RuntimeException {
-        public OutOfStockException(String message) {
-            super(message);
-        }
-    }
+   
 }

@@ -6,7 +6,10 @@ package com.mycompany.bookshop.resources;
 
 import com.mycompany.bookshop.Books;
 import com.mycompany.bookshop.Carts;
+import com.mycompany.bookshop.Customers;
 import com.mycompany.bookshop.Orders;
+import com.mycompany.bookshop.exceptions.CartNotFoundException;
+import com.mycompany.bookshop.exceptions.CustomerNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +34,14 @@ public class OrderResource {
     private static final Map<Integer, List<Orders>> customerOrders = new HashMap<>();
     private static int nextOrderId = 1;
     
+    private boolean customerExists(int customerId) {
+        Customers customer = CustomerResource.getCustomerById(customerId);
+        if (customer != null && customerId > 0)
+            return true;
+        else
+            return false;
+    }
+    
     @POST
     public Orders createOrder(@PathParam("customerId") int customerId) {
         if (!customerExists(customerId)) {
@@ -40,15 +51,15 @@ public class OrderResource {
         Carts cart = cartResource.getCart(customerId);
         
         if (cart == null || cart.isEmpty()) {
-            throw new EmptyCartException("Cart is empty. Cannot create order.");
+            throw new CartNotFoundException("Cart is empty. Cannot create order.");
         }
-        List<Books> allBooks = BookResource.getBooks();
-        Orders newOrder = Orders.fromCart(nextOrderId++, customerId, cart, allBooks);
+        Orders newOrder = Orders.fromCart(nextOrderId++, customerId, cart);
         if (!customerOrders.containsKey(customerId)) {
             customerOrders.put(customerId, new ArrayList<>());
         }
         customerOrders.get(customerId).add(newOrder);
-        cartResource.clearCart(customerId);
+        
+        cartResource.clearCart(CustomerResource.getCustomerById(customerId));
         return newOrder;
     }
     
@@ -74,6 +85,6 @@ public class OrderResource {
                 return order;
             }
         }
-        throw new OrderNotFoundException("Order with ID " + orderId + " not found for customer " + customerId);
+        throw new InvalidInputxception("Order with ID " + orderId + " not found for customer " + customerId);
     }
 }

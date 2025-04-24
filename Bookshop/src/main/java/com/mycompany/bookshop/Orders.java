@@ -4,6 +4,8 @@
  */
 package com.mycompany.bookshop;
 
+import com.mycompany.bookshop.exceptions.BookNotFoundException;
+import com.mycompany.bookshop.resources.BookResource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -18,47 +20,45 @@ public class Orders {
     private int customerId;
     private Date orderDate;
     private Map<Integer, Integer> items;
+    
     private double totalAmount;
-    private String status; 
     
     public Orders() {
-        this.items = new HashMap<>();
-        this.orderDate = new Date();
-        this.status = "PENDING";
+ 
     }
     
-    public Orders(int id, int customerId, Map<Integer, Integer> items, double totalAmount) {
+    public Orders(int id, int customerId, Map<Integer, Integer> items) {
         this.id = id;
         this.customerId = customerId;
-        this.orderDate = new Date();
         this.items = items;
         this.totalAmount = totalAmount;
-        this.status = "PENDING";
     }
     
-    public static Orders fromCart(int orderId, int customerId, Carts cart, List<Books> books) {
+    public static Orders fromCart(int orderId, int customerId, Carts cart) {
         Orders order = new Orders();
         order.setId(orderId);
         order.setCustomerId(customerId);
         
-        Map<Integer, Integer> cartItems = cart.getItems();
-        order.setItems(new HashMap<>(cartItems));
-        
-        double total = 0.0;
-        for (Map.Entry<Integer, Integer> entry : cartItems.entrySet()) {
-            int bookId = entry.getKey();
-            int quantity = entry.getValue();
-
-            for (Books book : books) {
-                if (book.getId() == bookId) {
-                    total += book.getPrice() * quantity;
-                    break;
-                }
-            }
-        }
-        
+        double total = order.calculateTotalPrice(cart);       
         order.setTotalAmount(total);
         return order;
+    }
+    public double calculateTotalPrice(Carts cart){
+        Map<Integer, Integer> items = cart.getItems();
+        double totalPrice = 0.0;
+        for (Map.Entry<Integer, Integer> entry : items.entrySet()) {
+        int bookId = entry.getKey();
+        int quantity = entry.getValue();
+
+        Books book = BookResource.getBookById(bookId); // Assuming this returns a Book object
+        if (book != null) {
+            double price = book.getPrice();
+            totalPrice += price * quantity;
+        } else {
+            throw new BookNotFoundException("Book not found for ID: " + bookId);
+        }
+        }
+        return totalPrice;
     }
     
     public int getId() {
@@ -85,13 +85,13 @@ public class Orders {
         this.orderDate = orderDate;
     }
     
-    public Map<Integer, Integer> getItems() {
-        return items;
-    }
-    
-    public void setItems(Map<Integer, Integer> items) {
-        this.items = items;
-    }
+//    public Map<Integer, Integer> getItems() {
+//        return items;
+//    }
+//    
+//    public void setItems(Map<Integer, Integer> items) {
+//        this.items = items;
+//    }
     
     public double getTotalAmount() {
         return totalAmount;
@@ -99,13 +99,5 @@ public class Orders {
     
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
-    }
-    
-    public String getStatus() {
-        return status;
-    }
-    
-    public void setStatus(String status) {
-        this.status = status;
     }
 }

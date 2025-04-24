@@ -5,6 +5,7 @@
 package com.mycompany.bookshop.resources;
 
 import com.mycompany.bookshop.Customers;
+import com.mycompany.bookshop.exceptions.CustomerNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -48,7 +49,7 @@ public class CustomerResource {
                 return customer;
             }
         }
-        return null;
+        throw new CustomerNotFoundException("Customer not Found");
     }
     
     @PUT
@@ -62,7 +63,8 @@ public class CustomerResource {
                 customers.set(i, updatedCustomer);
                 return;
             }       
-        }       
+        }
+        throw new CustomerNotFoundException("Customer not Found");
     }
     
     @DELETE
@@ -73,6 +75,7 @@ public class CustomerResource {
             if(customer.getId() == id){
                 customers.remove(i);
             }       
-        } 
+        }
+        throw new CustomerNotFoundException("Customer not Found");
     }
 }

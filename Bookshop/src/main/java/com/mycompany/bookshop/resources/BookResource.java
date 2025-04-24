@@ -6,6 +6,7 @@ package com.mycompany.bookshop.resources;
 
 import com.mycompany.bookshop.Authors;
 import com.mycompany.bookshop.Books;
+import com.mycompany.bookshop.exceptions.BookNotFoundException;
 import java.awt.PageAttributes;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +51,7 @@ public class BookResource {
                 return book;
             }
         }
-        return null;
+        throw new BookNotFoundException("Book with ID " + id + " not found.");
     }
     
     @PUT
@@ -64,7 +65,8 @@ public class BookResource {
                 books.set(i, updatedBook);
                 return;
             }       
-        }       
+        }
+        throw new BookNotFoundException("Book with ID " + id + " not found.");
     }
     
     @DELETE
@@ -75,6 +77,7 @@ public class BookResource {
             if(book.getId() == id){
                 books.remove(i);
             }       
-        } 
+        }
+        throw new BookNotFoundException("Book with ID " + id + " not found.");
     }
 }

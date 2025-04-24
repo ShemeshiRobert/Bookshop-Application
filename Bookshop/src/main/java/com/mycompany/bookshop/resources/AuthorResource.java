@@ -6,6 +6,7 @@ package com.mycompany.bookshop.resources;
 
 import com.mycompany.bookshop.Authors;
 import com.mycompany.bookshop.Books;
+import com.mycompany.bookshop.exceptions.AuthorNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -49,7 +50,7 @@ public class AuthorResource {
                 return author;
             }
         }
-        return null;
+        throw new AuthorNotFoundException("Author not Found");
     }
     
     @PUT
@@ -63,7 +64,8 @@ public class AuthorResource {
                authors.set(i, updatedAuthor);
                 return;
             }       
-        }       
+        }
+        throw new AuthorNotFoundException("Author not Found");
     }
     
     @DELETE
@@ -74,18 +76,25 @@ public class AuthorResource {
             if(author.getId() == id){
                 authors.remove(i);
             }       
-        } 
+        }
+        throw new AuthorNotFoundException("Author not Found");
     }
     
     @GET
     @Path("/{id}/books")
     @Produces(MediaType.APPLICATION_JSON)
     public List<Books> getBooksByAuthor(@PathParam("id") int id){
-        List<Books> bookList = new ArrayList<>();
-        for(Books book: BookResource.getBooks()){
-            if(book.getAuthor().getId() == id)
-                bookList.add(book);
+        for(int i = 0; i < authors.size(); i++){
+            Authors author = authors.get(i);
+            if(author.getId() == id){
+                List<Books> bookList = new ArrayList<>();
+                for(Books book: BookResource.getBooks()){
+                    if(book.getAuthor().getId() == id)
+                        bookList.add(book);
+                }
+                return bookList;
+            }       
         }
-        return bookList;
+        throw new AuthorNotFoundException("Author not Found");
     }
 }
