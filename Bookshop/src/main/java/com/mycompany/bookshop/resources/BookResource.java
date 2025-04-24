@@ -4,6 +4,7 @@
  */
 package com.mycompany.bookshop.resources;
 
+import com.mycompany.bookshop.Authors;
 import com.mycompany.bookshop.Books;
 import java.awt.PageAttributes;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class BookResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void createBook(Books book){
-        book.setId(nextId++);
+        book.setId(nextId++);        
         books.add(book);
     }
     
@@ -43,7 +44,7 @@ public class BookResource {
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Books getBookById(@PathParam("id") int id){
+    public static Books getBookById(@PathParam("id") int id){
         for(Books book: books){
             if(book.getId() == id){
                 return book;

@@ -21,30 +21,31 @@ import javax.ws.rs.core.MediaType;
  *
  * @author Shemeshi Robert
  */
+@Path("customers")
 public class CustomerResource {
     private static List<Customers> customers = new ArrayList<>();
     private static int nextId = 0;
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public void createBook(Customers customer){
+    public void createCustomer(Customers customer){
         customer.setId(nextId++);
         customers.add(customer);
     }
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public static List<Books> getBooks(){
-        return books;
+    public static List<Customers> getCustomers(){
+        return customers;
     }
     
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Books getBookById(@PathParam("id") int id){
-        for(Books book: books){
-            if(book.getId() == id){
-                return book;
+    public static Customers getCustomerById(@PathParam("id") int id){
+        for(Customers customer: customers){
+            if(customer.getId() == id){
+                return customer;
             }
         }
         return null;
@@ -53,12 +54,12 @@ public class CustomerResource {
     @PUT
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void updateBook(@PathParam("id") int id, Books updatedBook){
-        for(int i = 0; i < books.size(); i++){
-            Books book = books.get(i);
-            if(book.getId() == id){
-                updatedBook.setId(id);
-                books.set(i, updatedBook);
+    public void updateCustomer(@PathParam("id") int id, Customers updatedCustomer){
+        for(int i = 0; i < customers.size(); i++){
+            Customers customer = customers.get(i);
+            if(customer.getId() == id){
+                updatedCustomer.setId(id);
+                customers.set(i, updatedCustomer);
                 return;
             }       
         }       
@@ -66,11 +67,11 @@ public class CustomerResource {
     
     @DELETE
     @Path("/{id}")
-    public void deleteBook(@PathParam("id") int id) {
-        for(int i = 0; i < books.size(); i++){
-            Books book = books.get(i);
-            if(book.getId() == id){
-                books.remove(i);
+    public void deleteCustomer(@PathParam("id") int id) {
+        for(int i = 0; i < customers.size(); i++){
+            Customers customer = customers.get(i);
+            if(customer.getId() == id){
+                customers.remove(i);
             }       
         } 
     }
