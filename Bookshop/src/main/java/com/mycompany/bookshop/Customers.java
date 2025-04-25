@@ -4,6 +4,8 @@
  */
 package com.mycompany.bookshop;
 
+import com.mycompany.bookshop.exceptions.InvalidInputException;
+
 /**
  *
  * @author Shemeshi Robert
@@ -15,13 +17,18 @@ public class Customers {
     private int id;
 
     public Customers( String name, String email, String password) {
+        if(name == null){
+            throw new InvalidInputException("Title is required.");
+        }
+        if (email == null){
+            throw new InvalidInputException("Title is required.");
+        }
+        if (password == null){
+            throw new InvalidInputException("Title is required.");
+        }
         this.name = name;
         this.email = email;
         this.password = password;
-    }
-    
-    public Customers(){
-    
     }
     
     public int getId(){

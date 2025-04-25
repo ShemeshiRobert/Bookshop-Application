@@ -4,6 +4,8 @@
  */
 package com.mycompany.bookshop;
 
+import com.mycompany.bookshop.exceptions.InvalidInputException;
+
 /**
  *
  * @author Shemeshi Robert
@@ -14,12 +16,14 @@ public class Authors {
     private String biography;
 
     public Authors(String name, String biography) {
+        if(name == null){
+            throw new InvalidInputException("Title is required.");
+        }
+        if(biography == null){
+            throw new InvalidInputException("Title is required.");
+        }
         this.name = name;
         this.biography = biography;
-    }
-    
-    public Authors(){
-        
     }
     
     public int getId(){

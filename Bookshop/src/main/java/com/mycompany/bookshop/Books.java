@@ -18,20 +18,28 @@ public class Books {
     private double price;
     private int stockQuantity;
     
-    public Books(){
-    
-    }
-    
-     public Books(String title, int authorId, String isbn, int publicationYear, double price, int stockQuantity) {
+     public Books(String title, int authorId, String isbn, int publicationYear, double price, int stockQuantity){
+        if (title == null || title.trim().isEmpty()) {
+            throw new InvalidInputException("Title is required.");
+        }
+        if (isbn == null || isbn.trim().isEmpty()) {
+            throw new InvalidInputException("ISBN is required.");
+        }
+        if (publicationYear <= 0 ) {
+            throw new InvalidInputException("Invalid publication year.");
+        }
+        if (price < 0) {
+            throw new InvalidInputException("Price cannot be negative.");
+        }
+        if (stockQuantity < 0) {
+            throw new InvalidInputException("Enter valid Stock Quantity.");
+        }                                        
         this.title = title;
         this.authorId = authorId;
         this.isbn = isbn;
         this.publicationYear = publicationYear;
         this.price = price;
-        if (stockQuantity >= 0)
-            this.stockQuantity = stockQuantity;
-        else
-            throw new InvalidInputException("Enter valid Stock Quantity.");
+        this.stockQuantity = stockQuantity;               
     }
      
     public int getId(){

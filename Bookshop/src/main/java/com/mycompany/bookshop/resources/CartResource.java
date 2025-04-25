@@ -76,9 +76,15 @@ public class CartResource {
             throw new CustomerNotFoundException("Customer with ID " + customerId + " not found.");
         }
         Carts cart = getOrCreateCart(customerId);
+        if (!items.containsKey("bookId") || !items.containsKey("quantity")) {
+            throw new InvalidInputException("Both 'bookId' and 'quantity' must be provided.");
+        }
         Integer bookId = items.get("bookId");
-        Integer quantity = items.get("quantity");       
+        Integer quantity = items.get("quantity");
         Books book = findBookById(bookId);
+        if (book == null) {
+            throw new InvalidInputException("Book with ID " + bookId + " not found.");
+        }
         cart.addItem(bookId, quantity, book);
     }
     
