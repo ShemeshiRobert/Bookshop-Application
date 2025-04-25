@@ -10,6 +10,7 @@ import com.mycompany.bookshop.Customers;
 import com.mycompany.bookshop.Orders;
 import com.mycompany.bookshop.exceptions.CartNotFoundException;
 import com.mycompany.bookshop.exceptions.CustomerNotFoundException;
+import com.mycompany.bookshop.exceptions.InvalidInputException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,7 +60,7 @@ public class OrderResource {
         }
         customerOrders.get(customerId).add(newOrder);
         
-        cartResource.clearCart(CustomerResource.getCustomerById(customerId));
+        cart.clear(CustomerResource.getCustomerById(customerId));
         return newOrder;
     }
     
@@ -85,6 +86,6 @@ public class OrderResource {
                 return order;
             }
         }
-        throw new InvalidInputxception("Order with ID " + orderId + " not found for customer " + customerId);
+        throw new InvalidInputException("Order with ID " + orderId + " not found for customer " + customerId);
     }
 }

@@ -24,14 +24,13 @@ public class Orders {
     private double totalAmount;
     
     public Orders() {
- 
+
     }
     
     public Orders(int id, int customerId, Map<Integer, Integer> items) {
         this.id = id;
         this.customerId = customerId;
         this.items = items;
-        this.totalAmount = totalAmount;
     }
     
     public static Orders fromCart(int orderId, int customerId, Carts cart) {
@@ -41,6 +40,7 @@ public class Orders {
         
         double total = order.calculateTotalPrice(cart);       
         order.setTotalAmount(total);
+        order.items = new HashMap<>(cart.getItems());
         return order;
     }
     public double calculateTotalPrice(Carts cart){
@@ -50,7 +50,7 @@ public class Orders {
         int bookId = entry.getKey();
         int quantity = entry.getValue();
 
-        Books book = BookResource.getBookById(bookId); // Assuming this returns a Book object
+        Books book = BookResource.getBookById(bookId);
         if (book != null) {
             double price = book.getPrice();
             totalPrice += price * quantity;
@@ -85,13 +85,13 @@ public class Orders {
         this.orderDate = orderDate;
     }
     
-//    public Map<Integer, Integer> getItems() {
-//        return items;
-//    }
-//    
-//    public void setItems(Map<Integer, Integer> items) {
-//        this.items = items;
-//    }
+    public Map<Integer, Integer> getItems() {
+        return items;
+    }
+    
+    public void setItems(Map<Integer, Integer> items) {
+        this.items = items;
+    }
     
     public double getTotalAmount() {
         return totalAmount;
