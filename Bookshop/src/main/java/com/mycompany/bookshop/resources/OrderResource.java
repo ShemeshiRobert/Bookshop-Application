@@ -37,7 +37,7 @@ public class OrderResource {
     
     private boolean customerExists(int customerId) {
         Customers customer = CustomerResource.getCustomerById(customerId);
-        if (customer != null && customerId > 0)
+        if (customer != null && customerId >= 0)
             return true;
         else
             return false;

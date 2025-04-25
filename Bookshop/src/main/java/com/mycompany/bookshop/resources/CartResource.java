@@ -46,7 +46,7 @@ public class CartResource {
 
     private boolean customerExists(int customerId) {
         Customers customer = CustomerResource.getCustomerById(customerId);
-        if (customer != null && customerId > 0)
+        if (customer != null && customerId >= 0)
             return true;
         else
             return false;
@@ -69,7 +69,7 @@ public class CartResource {
     @Path("/items")
     @Consumes(MediaType.APPLICATION_JSON)
     public void addItemToCart(@PathParam("customerId") int customerId, Map<String, Integer> items) {
-        if (customerId <= 0) {
+        if (customerId < 0) {
             throw new CustomerNotFoundException("Invalid customer ID: " + customerId);
         }
         if (!customerExists(customerId)) {
@@ -85,7 +85,7 @@ public class CartResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Carts getCart(@PathParam("customerId") int customerId) {
-        if (customerId <= 0) {
+        if (customerId < 0) {
             throw new CustomerNotFoundException("Invalid customer ID: " + customerId);
         }
         if (!customerExists(customerId)) {
@@ -104,7 +104,7 @@ public class CartResource {
     @Path("/items/{bookId}")
     @Consumes(MediaType.APPLICATION_JSON)
     public void updateItemQuantity(@PathParam("customerId") int customerId, @PathParam("bookId") int bookId, int quantity){       
-        if (customerId <= 0 ) {
+        if (customerId < 0 ) {
             throw new CustomerNotFoundException("Invalid customer ID: " + customerId);
         }
         if (!customerExists(customerId)) {
@@ -122,7 +122,7 @@ public class CartResource {
     @DELETE
     @Path("/items/{bookId}")
     public Carts removeItem(@PathParam("customerId") int customerId,@PathParam("bookId") int bookId) {       
-        if (customerId <= 0) {
+        if (customerId < 0) {
             throw new CustomerNotFoundException("Invalid customer ID: " + customerId);
         }
         if (!customerExists(customerId)) {
