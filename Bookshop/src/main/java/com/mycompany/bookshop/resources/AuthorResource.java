@@ -7,6 +7,7 @@ package com.mycompany.bookshop.resources;
 import com.mycompany.bookshop.Authors;
 import com.mycompany.bookshop.Books;
 import com.mycompany.bookshop.exceptions.AuthorNotFoundException;
+import com.mycompany.bookshop.exceptions.InvalidInputException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -31,6 +32,12 @@ public class AuthorResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void createAuthor(Authors author){
+        if (author.getName() == null || author.getName().trim().isEmpty()) {
+            throw new InvalidInputException("Author name is required.");
+        }
+        if (author.getBiography() == null || author.getBiography().trim().isEmpty()) {
+        throw new InvalidInputException("Biography is required.");
+    }
         author.setId(nextId++);
         authors.add(author);
     }

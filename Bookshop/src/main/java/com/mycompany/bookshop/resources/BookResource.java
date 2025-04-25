@@ -7,6 +7,7 @@ package com.mycompany.bookshop.resources;
 import com.mycompany.bookshop.Authors;
 import com.mycompany.bookshop.Books;
 import com.mycompany.bookshop.exceptions.BookNotFoundException;
+import com.mycompany.bookshop.exceptions.InvalidInputException;
 import java.awt.PageAttributes;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +33,15 @@ public class BookResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void createBook(Books book){
+        if (book.getTitle() == null || book.getTitle().isEmpty()) {
+        throw new InvalidInputException("Title is required");
+        }
+        if (book.getIsbn() == null || book.getIsbn().isEmpty()) {
+            throw new InvalidInputException("ISBN is required");
+        }
+        if (book.getAuthorId() == null) {
+            throw new InvalidInputException("Author ID is required");
+        }
         book.setId(nextId++);        
         books.add(book);
     }

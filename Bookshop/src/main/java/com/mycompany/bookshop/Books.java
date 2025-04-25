@@ -13,20 +13,45 @@ import com.mycompany.bookshop.resources.AuthorResource;
 public class Books {
     private int id;
     private String title;
-    private int authorId;
+    private Integer authorId;
     private String isbn;
     private int publicationYear;
     private double price;
     private int stockQuantity;
     AuthorResource authorResource;
     
-     public Books(String title, int authorId, String isbn, int publicationYear, double price, int stockQuantity){                                     
+     public Books(String title, int authorId, String isbn, int publicationYear, double price, int stockQuantity) {
+        if (title == null || title.trim().isEmpty()) {
+            throw new InvalidInputException("Title is required.");
+        }
+
+        AuthorResource authorResource = new AuthorResource();
+        if (authorId <= 0 || authorResource.getAuthorById(authorId) == null) {
+            throw new InvalidInputException("Valid authorId is required.");
+        }
+
+        if (isbn == null || isbn.trim().isEmpty()) {
+            throw new InvalidInputException("ISBN is required.");
+        }
+
+        if (publicationYear <= 0) {
+            throw new InvalidInputException("Valid publication year is required.");
+        }
+
+        if (price < 0) {
+            throw new InvalidInputException("Price cannot be negative.");
+        }
+
+        if (stockQuantity < 0) {
+            throw new InvalidInputException("Enter valid Stock Quantity.");
+        }
+
         this.title = title;
         this.authorId = authorId;
         this.isbn = isbn;
         this.publicationYear = publicationYear;
         this.price = price;
-        this.stockQuantity = stockQuantity;               
+        this.stockQuantity = stockQuantity;
     }
      
     public Books() {
@@ -51,10 +76,10 @@ public class Books {
         this.title = title; 
     }
 
-    public int getAuthorId() {
+    public Integer getAuthorId() {
         return authorId; 
     }
-    public void setAuthorId(int authorId) {
+    public void setAuthorId(Integer authorId) {
         authorResource = new AuthorResource();        
         if (authorId < 0 || authorResource.getAuthorById(authorId) == null) {
             throw new InvalidInputException("Valid authorId is required.");

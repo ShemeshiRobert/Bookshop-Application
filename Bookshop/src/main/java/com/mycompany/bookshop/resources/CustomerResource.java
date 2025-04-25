@@ -6,6 +6,7 @@ package com.mycompany.bookshop.resources;
 
 import com.mycompany.bookshop.Customers;
 import com.mycompany.bookshop.exceptions.CustomerNotFoundException;
+import com.mycompany.bookshop.exceptions.InvalidInputException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.Consumes;
@@ -30,6 +31,15 @@ public class CustomerResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public void createCustomer(Customers customer){
+        if(customer.getName() == null){
+            throw new InvalidInputException("Name is required.");
+        }
+        if (customer.getEmail()== null){
+            throw new InvalidInputException("Email is required.");
+        }
+        if (customer.getPassword()== null){
+            throw new InvalidInputException("Password is required.");
+        }
         customer.setId(nextId++);
         customers.add(customer);
     }
