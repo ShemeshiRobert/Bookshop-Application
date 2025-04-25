@@ -4,6 +4,7 @@
  */
 package com.mycompany.bookshop;
 import com.mycompany.bookshop.Authors;
+import com.mycompany.bookshop.exceptions.InvalidInputException;
 /**
  *
  * @author Shemeshi Robert
@@ -27,7 +28,10 @@ public class Books {
         this.isbn = isbn;
         this.publicationYear = publicationYear;
         this.price = price;
-        this.stockQuantity = stockQuantity;
+        if (stockQuantity >= 0)
+            this.stockQuantity = stockQuantity;
+        else
+            throw new InvalidInputException("Enter valid Stock Quantity.");
     }
      
     public int getId(){
@@ -77,7 +81,10 @@ public class Books {
         return stockQuantity; 
     }
     public void setStockQuantity(int stockQuantity) {
-        this.stockQuantity = stockQuantity; 
+        if (stockQuantity < 0) {
+            throw new InvalidInputException("Enter valid Stock Quantity.");
+        }
+        this.stockQuantity = stockQuantity;
     }
 
 }
