@@ -20,26 +20,7 @@ public class Books {
     private int stockQuantity;
     AuthorResource authorResource;
     
-     public Books(String title, int authorId, String isbn, int publicationYear, double price, int stockQuantity){
-        authorResource = new AuthorResource();
-        if (title == null) {
-            throw new InvalidInputException("Title is required.");
-        }
-        if (authorId < 0 || authorResource.getAuthorById(authorId) == null) {
-            throw new InvalidInputException("Valid authorId is required.");
-        }
-        if (isbn == null) {
-            throw new InvalidInputException("ISBN is required.");
-        }
-        if (publicationYear <= 0 ) {
-            throw new InvalidInputException("Invalid publication year.");
-        }
-        if (price < 0) {
-            throw new InvalidInputException("Price cannot be negative.");
-        }
-        if (stockQuantity < 0) {
-            throw new InvalidInputException("Enter valid Stock Quantity.");
-        }                                        
+     public Books(String title, int authorId, String isbn, int publicationYear, double price, int stockQuantity){                                     
         this.title = title;
         this.authorId = authorId;
         this.isbn = isbn;
@@ -64,6 +45,9 @@ public class Books {
         return title;
     }
     public void setTitle(String title) {
+        if (title == null) {
+            throw new InvalidInputException("Title is required.");
+        }
         this.title = title; 
     }
 
@@ -71,6 +55,10 @@ public class Books {
         return authorId; 
     }
     public void setAuthorId(int authorId) {
+        authorResource = new AuthorResource();        
+        if (authorId < 0 || authorResource.getAuthorById(authorId) == null) {
+            throw new InvalidInputException("Valid authorId is required.");
+        }
         this.authorId = authorId; 
     }
 
@@ -78,6 +66,9 @@ public class Books {
         return isbn; 
     }
     public void setIsbn(String isbn) {
+        if (isbn == null) {
+            throw new InvalidInputException("ISBN is required.");
+        }
         this.isbn = isbn; 
     }
 
@@ -92,6 +83,9 @@ public class Books {
         return price; 
     }
     public void setPrice(double price) {
+        if (price < 0) {
+            throw new InvalidInputException("Price cannot be negative.");
+        }
         this.price = price; 
     }
 

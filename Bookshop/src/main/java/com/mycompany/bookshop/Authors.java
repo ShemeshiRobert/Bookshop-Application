@@ -16,12 +16,6 @@ public class Authors {
     private String biography;
 
     public Authors(String name, String biography) {
-        if(name == null){
-            throw new InvalidInputException("Title is required.");
-        }
-        if(biography == null){
-            throw new InvalidInputException("Title is required.");
-        }
         this.name = name;
         this.biography = biography;
     }
@@ -43,7 +37,10 @@ public class Authors {
         return name; 
     }
     public void setName(String name) {
-        this.name = name; 
+        if (name == null || name.trim().isEmpty()) {
+            throw new InvalidInputException("Author name is required.");
+        }
+        this.name = name;
     }
 
     public String getBiography() {
@@ -51,7 +48,10 @@ public class Authors {
     }
     
     public void setBiography(String biography) {
-        this.biography = biography; 
+    if (biography == null || biography.trim().isEmpty()) {
+        throw new InvalidInputException("Biography is required.");
     }
+    this.biography = biography;
+}
 }
 

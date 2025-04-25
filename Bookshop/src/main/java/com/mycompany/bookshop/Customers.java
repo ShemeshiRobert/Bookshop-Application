@@ -16,16 +16,7 @@ public class Customers {
     private String password;
     private int id;
 
-    public Customers( String name, String email, String password) {
-        if(name == null){
-            throw new InvalidInputException("Title is required.");
-        }
-        if (email == null){
-            throw new InvalidInputException("Title is required.");
-        }
-        if (password == null){
-            throw new InvalidInputException("Title is required.");
-        }
+    public Customers( String name, String email, String password) {              
         this.name = name;
         this.email = email;
         this.password = password;
@@ -48,6 +39,9 @@ public class Customers {
         return name; 
     }
     public void setName(String name) {
+        if(name == null){
+            throw new InvalidInputException("Title is required.");
+        }
         this.name = name;
     }
 
@@ -55,13 +49,19 @@ public class Customers {
         return email; 
     }
     public void setEmail(String email) {
+        if (email == null){
+            throw new InvalidInputException("Title is required.");
+        }
         this.email = email; 
     }
 
     public String getPassword() { 
         return password;
     }
-    public void setPassword(String password) { 
+    public void setPassword(String password) {
+        if (password == null){
+            throw new InvalidInputException("Title is required.");
+        }
         this.password = password;
     }
 }
