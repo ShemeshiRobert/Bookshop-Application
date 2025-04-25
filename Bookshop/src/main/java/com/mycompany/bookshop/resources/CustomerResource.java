@@ -74,6 +74,7 @@ public class CustomerResource {
             Customers customer = customers.get(i);
             if(customer.getId() == id){
                 customers.remove(i);
+                return;
             }       
         }
         throw new CustomerNotFoundException("Customer not Found");

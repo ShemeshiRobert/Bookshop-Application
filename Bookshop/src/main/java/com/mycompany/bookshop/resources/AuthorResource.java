@@ -75,6 +75,7 @@ public class AuthorResource {
             Authors author = authors.get(i);
             if(author.getId() == id){
                 authors.remove(i);
+                return;
             }       
         }
         throw new AuthorNotFoundException("Author not Found");
@@ -83,18 +84,23 @@ public class AuthorResource {
     @GET
     @Path("/{id}/books")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Books> getBooksByAuthor(@PathParam("id") int id){
-        for(int i = 0; i < authors.size(); i++){
-            Authors author = authors.get(i);
-            if(author.getId() == id){
-                List<Books> bookList = new ArrayList<>();
-                for(Books book: BookResource.getBooks()){
-                    if(book.getAuthor().getId() == id)
-                        bookList.add(book);
-                }
-                return bookList;
-            }       
+    public List<Books> getBooksByAuthor(@PathParam("id") int id) {
+        boolean authorExists = false;
+        for (Authors author : authors) {
+            if (author.getId() == id) {
+                authorExists = true;
+                break;
+            }
+        }   
+        if (!authorExists) {
+            throw new AuthorNotFoundException("Author not Found");
         }
-        throw new AuthorNotFoundException("Author not Found");
+        List<Books> bookList = new ArrayList<>();
+        for (Books book : BookResource.getBooks()) {
+            if (book.getAuthorId() == id) {
+                bookList.add(book);
+            }
+        }
+        return bookList;
     }
 }

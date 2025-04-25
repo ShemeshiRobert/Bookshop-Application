@@ -11,7 +11,7 @@ import com.mycompany.bookshop.Authors;
 public class Books {
     private int id;
     private String title;
-    private Authors author;
+    private int authorId;
     private String isbn;
     private int publicationYear;
     private double price;
@@ -21,10 +21,9 @@ public class Books {
     
     }
     
-     public Books(int id, String title, Authors author, String isbn, int publicationYear, double price, int stockQuantity) {
-        this.id = id;
+     public Books(String title, int authorId, String isbn, int publicationYear, double price, int stockQuantity) {
         this.title = title;
-        this.author = author;
+        this.authorId = authorId;
         this.isbn = isbn;
         this.publicationYear = publicationYear;
         this.price = price;
@@ -46,11 +45,11 @@ public class Books {
         this.title = title; 
     }
 
-    public Authors getAuthor() {
-        return author; 
+    public int getAuthorId() {
+        return authorId; 
     }
-    public void setAuthor(Authors author) {
-        this.author = author; 
+    public void setAuthorId(int authorId) {
+        this.authorId = authorId; 
     }
 
     public String getIsbn() {

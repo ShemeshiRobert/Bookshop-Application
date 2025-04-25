@@ -13,8 +13,7 @@ public class Authors {
     private String name;
     private String biography;
 
-    public Authors(int id, String name, String biography) {
-        this.id = id;
+    public Authors(String name, String biography) {
         this.name = name;
         this.biography = biography;
     }

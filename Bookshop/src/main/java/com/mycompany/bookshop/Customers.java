@@ -14,8 +14,7 @@ public class Customers {
     private String password;
     private int id;
 
-    public Customers(int id, String name, String email, String password) {
-        this.id = id;
+    public Customers( String name, String email, String password) {
         this.name = name;
         this.email = email;
         this.password = password;
