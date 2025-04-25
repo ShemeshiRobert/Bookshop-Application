@@ -74,6 +74,8 @@ public class AuthorResource {
         for(int i = 0; i < authors.size(); i++){
             Authors author = authors.get(i);
             if(author.getId() == id){
+                List<Books> booksByAuthor = getBooksByAuthor(id);
+                BookResource.getBooks().removeAll(booksByAuthor);
                 authors.remove(i);
                 return;
             }       
