@@ -15,7 +15,7 @@
 
     <servlet-mapping>
         <servlet-name>BookshopApplication</servlet-name>
-        <url-pattern>/rest/*</url-pattern>
+        <url-pattern>/bookshop/*</url-pattern>
     </servlet-mapping>
 
     <session-config>

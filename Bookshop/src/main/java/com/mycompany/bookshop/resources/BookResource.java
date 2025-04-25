@@ -70,14 +70,14 @@ public class BookResource {
     }
     
     @DELETE
-    @Path("/{id}")
-    public void deleteBook(@PathParam("id") int id) {
-        for(int i = 0; i < books.size(); i++){
-            Books book = books.get(i);
-            if(book.getId() == id){
-                books.remove(i);
-            }       
-        }
-        throw new BookNotFoundException("Book with ID " + id + " not found.");
+@Path("/{id}")
+public void deleteBook(@PathParam("id") int id) {
+    for(int i = 0; i < books.size(); i++){
+        Books book = books.get(i);
+        if(book.getId() == id){
+            books.remove(i);
+        }       
     }
+    throw new BookNotFoundException("Book with ID " + id + " not found.");
+}
 }
