@@ -48,6 +48,10 @@ public class Books {
         this.stockQuantity = stockQuantity;               
     }
      
+    public Books() {
+
+    }
+     
     public int getId(){
         return id;
     }

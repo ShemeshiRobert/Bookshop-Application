@@ -31,6 +31,11 @@ public class Customers {
         this.password = password;
     }
     
+    public Customers() {
+
+    }
+
+    
     public int getId(){
         return id;
     }

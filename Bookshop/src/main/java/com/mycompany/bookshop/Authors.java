@@ -26,6 +26,11 @@ public class Authors {
         this.biography = biography;
     }
     
+    public Authors() {
+
+    }
+
+    
     public int getId(){
         return id;
     }
